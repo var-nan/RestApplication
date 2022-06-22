@@ -6,6 +6,7 @@ public class CoinApiResponseDto {
     private long timestamp;
 
     public CoinApiResponseDto(){}
+
     public CoinApiResponseDto(CoinDataDto data, long timestamp) {
         this.data = data;
         this.timestamp = timestamp;

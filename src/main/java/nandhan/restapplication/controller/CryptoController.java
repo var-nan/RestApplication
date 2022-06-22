@@ -29,6 +29,13 @@ public class CryptoController {
         Map<String, String> prices = coinService.getPrices(symbols);
         return new ResponseEntity<Map<String,String>>(prices, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/updateall", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> update() {
+        // store all the prices in the database
+        System.out.println("update is called");
+        return new ResponseEntity<String>(coinService.insertAllSymbols(),HttpStatus.OK);
+    }
 }
 
 /**

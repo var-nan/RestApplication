@@ -5,5 +5,6 @@ import java.util.Map;
 
 public interface CoinService {
 
+    String insertAllSymbols();
     Map<String, String> getPrices(List<String> symbols);
 }
