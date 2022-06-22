@@ -1,23 +1,23 @@
-package nandhan.restapplication;
+package nandhan.restapplication.controller;
 
+import nandhan.restapplication.service.CoinService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
-public class AppController {
+public class CryptoController {
 
-    // coincap api url
-    private String uri = "https://api.coincap.io/V2/rates/";
-
+    @Autowired
+    private CoinService coinService;
     /**
      * This method returns the price of the given cryptocurrencies as dictionary object.
      * @param symbols (GET parameter)
@@ -26,21 +26,7 @@ public class AppController {
     @GetMapping(value="/price", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> price (@RequestParam("symbols") List<String> symbols) {
 
-        Map<String, String> prices = new HashMap<>();
-        RestTemplate restTemplate = new RestTemplate();
-
-        for (String s: symbols) {
-            System.out.println(s);
-            ResponseEntity<Map> responseEntity = restTemplate.getForEntity(uri+s,Map.class);
-            if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                Map bodyMap = (Map) responseEntity.getBody();
-                if (bodyMap.containsKey("data")) {
-                    Map dataMap = (Map) bodyMap.get("data");
-                    prices.put(s, dataMap.get("rateUsd").toString());
-                } else
-                    prices.put(s,"Unable to get the Price. Invalid Symbol");
-            }
-        }
+        Map<String, String> prices = coinService.getPrices(symbols);
         return new ResponseEntity<Map<String,String>>(prices, HttpStatus.OK);
     }
 }
